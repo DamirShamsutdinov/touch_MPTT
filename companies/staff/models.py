@@ -4,8 +4,8 @@ from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
 
-class Boss(AbstractUser):
-    """Модель Боса"""
+class Specialist(AbstractUser):
+    """Абстрактная модель сотрудника компании"""
     salary = models.IntegerField()
     patronymic = models.CharField(_('patronymic'), max_length=150, blank=True)
     REQUIRED_FIELDS = [
@@ -18,38 +18,33 @@ class Boss(AbstractUser):
 
     class Meta:
         ordering = ("id",)
+
+    def __str__(self):
+        return self.first_name + self.last_name
+
+
+class Boss(Specialist):
+    """Модель Боса"""
+
+    class Meta:
+        verbose_name = "Босс"
 
     def __str__(self):
         return self.first_name + self.last_name
 
 
 class Worker(AbstractUser):
-    """Модель Сотрудника"""
-    salary = models.IntegerField()
-    patronymic = models.CharField(_('patronymic'), max_length=150, blank=True)
-    boss = models.ManyToManyField(
-        Boss,
-        through="BossWorkers",
-        related_name="worker",
-        verbose_name="Босс"
-    )
-    REQUIRED_FIELDS = [
-        'last_name',
-        'first_name',
-        'patronymic',
-        'email',
-        'salary'
-    ]
+    """Модель Штатного сотрудника"""
 
     class Meta:
-        ordering = ("id",)
+        verbose_name = "Штатный сотрудник"
 
     def __str__(self):
         return self.first_name + self.last_name
 
 
-class BossWorkers(AbstractUser):
-    """Промежуточная модель Босс-Сотрудник"""
+class BossWorkers(models.Model):
+    """Промежуточная модель Босс-Штатный"""
     boss = models.ForeignKey(
         Boss,
         on_delete=models.CASCADE,
@@ -62,11 +57,11 @@ class BossWorkers(AbstractUser):
         on_delete=models.CASCADE,
         null=True,
         related_name="bossworkers",
-        verbose_name="Сотрудник",
+        verbose_name="Штатный сотрудник",
     )
 
     class Meta:
-        verbose_name = "Сотрудники_босса"
+        verbose_name = "Босс_Штатные_спецы"
         constraints = [
             UniqueConstraint(
                 fields=("boss", "worker"),
@@ -77,3 +72,22 @@ class BossWorkers(AbstractUser):
         return (
             f"Босс {self.boss.name} над подчиненным {self.worker.name}"
         )
+
+class CurrentSpecialist(models.Model):
+    """Текущий специалист"""
+    worker = models.ManyToManyField(
+        Worker,
+        related_name="departments",
+        through="BossWorkers",
+        verbose_name="Штатный сотрудник"
+    )
+    boss = models.ForeignKey(
+        Boss,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="departments",
+        verbose_name="Босс"
+    )
+
+    class Meta:
+        verbose_name = "Текущее подразделение"
