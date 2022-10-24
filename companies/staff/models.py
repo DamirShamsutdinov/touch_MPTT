@@ -77,7 +77,7 @@ class CurrentSpecialist(models.Model):
     """Текущий специалист"""
     worker = models.ManyToManyField(
         Worker,
-        related_name="departments",
+        related_name="currspec",
         through="BossWorkers",
         verbose_name="Штатный сотрудник"
     )
@@ -85,7 +85,7 @@ class CurrentSpecialist(models.Model):
         Boss,
         on_delete=models.SET_NULL,
         null=True,
-        related_name="departments",
+        related_name="currspec",
         verbose_name="Босс"
     )
 

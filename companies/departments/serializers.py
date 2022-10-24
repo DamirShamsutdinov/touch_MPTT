@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from companies.departments.models import BigBrother, LittleBrother, Brothers, \
+from departments.models import BigBrother, LittleBrother, Brothers, \
     CurrentDepartment
 
 

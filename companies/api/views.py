@@ -1,10 +1,11 @@
 from rest_framework import viewsets
 
-from companies.departments.models import CurrentDepartment
-from companies.departments.serializers import CurrentDepartmentSerializer
-from companies.staff.models import Boss, CurrentSpecialist
-from companies.staff.serializers import BossSerializer, \
-    CurrentSpecialistSerializer
+# from departments.models import CurrentDepartment
+# from departments.serializers import CurrentDepartmentSerializer
+from departments.models import CurrentDepartment
+from departments.serializers import CurrentDepartmentSerializer
+from staff.models import CurrentSpecialist
+from staff.serializers import CurrentSpecialistSerializer
 
 
 class CurrentSpecialistViewSet(viewsets.ModelViewSet):

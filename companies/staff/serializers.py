@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from companies.staff.models import Boss, Worker, BossWorkers, CurrentSpecialist
+from staff.models import Boss, Worker, BossWorkers, CurrentSpecialist
 
 
 class BossSerializer(serializers.ModelSerializer):
@@ -33,4 +33,3 @@ class CurrentSpecialistSerializer(serializers.ModelSerializer):
     class Meta:
         fields = "__all__"
         model = CurrentSpecialist
-
