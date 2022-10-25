@@ -3,6 +3,8 @@ from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 
+from departments.models import CurrentDepartment
+
 
 class Specialist(AbstractUser):
     """Абстрактная модель сотрудника компании"""
@@ -16,11 +18,8 @@ class Specialist(AbstractUser):
         'salary'
     ]
 
-    class Meta:
-        ordering = ("id",)
-
     def __str__(self):
-        return self.first_name + self.last_name
+        return str(self.first_name + self.last_name)
 
 
 class Boss(Specialist):
@@ -29,18 +28,12 @@ class Boss(Specialist):
     class Meta:
         verbose_name = "Босс"
 
-    def __str__(self):
-        return self.first_name + self.last_name
 
-
-class Worker(AbstractUser):
+class Worker(Specialist):
     """Модель Штатного сотрудника"""
 
     class Meta:
         verbose_name = "Штатный сотрудник"
-
-    def __str__(self):
-        return self.first_name + self.last_name
 
 
 class BossWorkers(models.Model):
@@ -73,14 +66,29 @@ class BossWorkers(models.Model):
             f"Босс {self.boss.name} над подчиненным {self.worker.name}"
         )
 
+
 class CurrentSpecialist(models.Model):
     """Текущий специалист"""
-    worker = models.ManyToManyField(
-        Worker,
-        related_name="currspec",
-        through="BossWorkers",
-        verbose_name="Штатный сотрудник"
+    BOSS = "boss"
+    WORKER = "worker"
+    ROLE = [
+        (BOSS, "Босс"),
+        (WORKER, "Штатный сотрудник")
+    ]
+
+    role = models.CharField(
+        max_length=16,
+        choices=ROLE,
+        default=WORKER,
+        verbose_name="Роль сотрудника",
     )
+    if role == 'BOSS':
+        worker = models.ManyToManyField(
+            Worker,
+            related_name="currspec",
+            through="BossWorkers",
+            verbose_name="Штатный сотрудник"
+        )
     boss = models.ForeignKey(
         Boss,
         on_delete=models.SET_NULL,
@@ -89,5 +97,14 @@ class CurrentSpecialist(models.Model):
         verbose_name="Босс"
     )
 
+    department = models.ForeignKey(
+        CurrentDepartment,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="depspec",
+        verbose_name="Подразделение"
+    )
+
     class Meta:
         verbose_name = "Текущее подразделение"
+        ordering = ("id",)
