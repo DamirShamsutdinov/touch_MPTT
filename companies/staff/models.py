@@ -47,12 +47,6 @@ class Position(MPTTModel):
     name = models.CharField(max_length=100, verbose_name='Название штатки')
     salary = models.PositiveSmallIntegerField(verbose_name='Заработная плата')
     description = models.TextField(verbose_name='Обязанности и т.п.')
-    specialist = models.ForeignKey(
-        Specialist,
-        on_delete=models.SET_NULL,
-        related_name="position",
-        verbose_name="Специалист",
-    )
     parent = TreeForeignKey(
         'self',
         on_delete=models.CASCADE,
