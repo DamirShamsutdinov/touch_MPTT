@@ -1,101 +1,49 @@
+import mptt
 from django.db import models
-from django.db.models import UniqueConstraint
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
 
-# from staff.models import CurrentSpecialist
-from staff.models import CurrentSpecialist
-
-
-class Department(models.Model):
-    """Абстрактная модель департамента"""
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=500)
-
-    def __str__(self):
-        return self.name
+from staff.models import Specialist, Position
 
 
-class BigBrother(Department):
-    """Старшее подразделение"""
-
-    class Meta:
-        verbose_name = "Старшее подразделение"
-
-    def __str__(self):
-        return self.name
-
-
-class LittleBrother(Department):
-    """Младшее подразделение"""
-
-    class Meta:
-        verbose_name = "Младшее подразделение"
-
-    def __str__(self):
-        return self.name
-
-
-class Brothers(models.Model):
-    """Модель отношения Старший-Младший подразделения"""
-    big_bro = models.ForeignKey(
-        BigBrother,
-        on_delete=models.CASCADE,
-        null=True,
-        related_name="brothers",
-        verbose_name="Большой брат"
+class Department(MPTTModel):
+    """Модель департамента"""
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name='Название департамента'
     )
-    little_bro = models.ForeignKey(
-        LittleBrother,
-        on_delete=models.CASCADE,
-        null=True,
-        related_name="brothers",
-        verbose_name="Младший брат"
-    )
-
-    class Meta:
-        verbose_name = "Старший_Младший_подразделения"
-        constraints = [
-            UniqueConstraint(
-                fields=("big_bro", "little_bro"),
-                name="unique_brothers"),
-        ]
-
-    def __str__(self):
-        return (
-            f"Во главе {self.big_bro.name} "
-            f"над младшим {self.little_bro.name}"
-        )
-
-
-class CurrentDepartment(models.Model):
-    """Отдел/подразделение"""
-    BIGBROTHER = "bigbrother"
-    LITTLEBROTHER = "littlebrother"
-    ROLE = [
-        (BIGBROTHER, "Старшее подразделение"),
-        (LITTLEBROTHER, "Младшее подразделение")
-    ]
-
-    role = models.CharField(
-        max_length=16,
-        choices=ROLE,
-        default=LITTLEBROTHER,
-        verbose_name="Роль подразделения",
-    )
-    if role == 'BIGBROTHER':
-        little_bro = models.ManyToManyField(
-            LittleBrother,
-            related_name="currdep",
-            through="Brothers",
-            verbose_name="Младший брат"
-        )
-    big_bro = models.ForeignKey(
-        BigBrother,
+    description = models.TextField(verbose_name='Описание департамента')
+    boss = models.ForeignKey(
+        Specialist,
         on_delete=models.SET_NULL,
+        blank=False,
         null=True,
-        related_name="currdep",
-        verbose_name="Большой брат"
+        related_name='dep_boss',
+        verbose_name='Босс департамента'
+    )
+    staff = models.ManyToManyField(
+        Specialist,
+        null=True,
+        blank=True,
+        default='-пусто-',
+        related_name='dep_staff',
+        verbose_name='Штатный сотрудник департамента'
+    )
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='children'
     )
 
-    class Meta:
-        verbose_name = "Текущее подразделение"
-        ordering = ("id",)
+    def __str__(self):
+        return self.name
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+        db_table = "department"
+        verbose_name = "Департамент"
+        verbose_name_plural = "Департаменты"
+

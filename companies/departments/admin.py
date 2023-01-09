@@ -1,3 +1,7 @@
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
 
-# Register your models here.
+from departments.models import Department
+
+admin.site.register(Department, MPTTModelAdmin)
+# admin.site.register(DepartmentStaff)

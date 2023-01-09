@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'api',
     'staff',
     'departments',
+    'mptt',
 ]
 
 MIDDLEWARE = [
@@ -109,4 +110,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'staff.Specialist'
+# AUTH_USER_MODEL = 'staff.Specialist'
+
+MPTT_ADMIN_LEVEL_INDENT = 20

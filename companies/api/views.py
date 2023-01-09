@@ -1,22 +1,27 @@
+from mptt.forms import TreeNodeChoiceField
 from rest_framework import viewsets
-
-# from departments.models import CurrentDepartment
-# from departments.serializers import CurrentDepartmentSerializer
-from departments.models import CurrentDepartment
-from departments.serializers import CurrentDepartmentSerializer
-from staff.models import CurrentSpecialist
-from staff.serializers import CurrentSpecialistSerializer
+from departments.models import Department
+from departments.serializers import DepartmentSerializer, PositionSerializer
+from staff.models import Specialist, Position
+from staff.serializers import SpecialistSerializer
 
 
-class CurrentSpecialistViewSet(viewsets.ModelViewSet):
-    """Вьюсет для доступа к штату Боссов>"""
+class SpecialistViewSet(viewsets.ModelViewSet):
+    """Вьюсет для доступа к специалистам"""
 
-    queryset = CurrentSpecialist.objects.all()
-    serializer_class = CurrentSpecialistSerializer
+    queryset = Specialist.objects.all()
+    serializer_class = SpecialistSerializer
 
 
-class CurrentDepartmentViewSet(viewsets.ModelViewSet):
+class PositionViewSet(viewsets.ModelViewSet):
+    """Вьюсет для доступа к позициям штатки"""
+
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
+
+
+class DepartmentViewSet(viewsets.ModelViewSet):
     """Вьюсет для доступа к Департаментам"""
 
-    queryset = CurrentDepartment.objects.all()
-    serializer_class = CurrentDepartmentSerializer
+    queryset = TreeNodeChoiceField(Department.objects.all())
+    serializer_class = DepartmentSerializer

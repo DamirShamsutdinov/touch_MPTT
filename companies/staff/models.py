@@ -1,110 +1,56 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.utils.translation import gettext_lazy as _
-
-from departments.models import CurrentDepartment
 
 
-class Specialist(AbstractUser):
-    """Абстрактная модель сотрудника компании"""
-    salary = models.IntegerField()
-    patronymic = models.CharField(_('patronymic'), max_length=150, blank=True)
-    REQUIRED_FIELDS = [
-        'last_name',
-        'first_name',
-        'patronymic',
-        'email',
-        'salary'
-    ]
+class Position(models.Model):
+    """Модель штатной позиции сотрудника"""
+    name = models.CharField(max_length=100, verbose_name='Название штатки')
+    salary = models.PositiveSmallIntegerField(verbose_name='Заработная плата')
+    description = models.TextField(verbose_name='Обязанности и т.п.')
+
+    class Meta:
+        db_table = "position"
+        ordering = ("name",)
+        verbose_name = "Штатная позиция"
+        verbose_name_plural = "Штатные позиции"
 
     def __str__(self):
-        return str(self.first_name + self.last_name)
+        return self.name
 
 
-class Boss(Specialist):
-    """Модель Боса"""
-
-    class Meta:
-        verbose_name = "Босс"
-
-
-class Worker(Specialist):
-    """Модель Штатного сотрудника"""
-
-    class Meta:
-        verbose_name = "Штатный сотрудник"
-
-
-class BossWorkers(models.Model):
-    """Промежуточная модель Босс-Штатный"""
-    boss = models.ForeignKey(
-        Boss,
-        on_delete=models.CASCADE,
-        null=True,
-        related_name="bossworkers",
-        verbose_name="Босс",
+class Specialist(models.Model):
+    """Модель сотрудника компании"""
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDERS = [
+        (MALE, 'Мужчина'),
+        (FEMALE, 'Женщина'),
+    ]
+    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255, verbose_name='ФИО')
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDERS,
+        verbose_name='Половой признак'
     )
-    worker = models.ForeignKey(
-        Worker,
+    position = models.ForeignKey(
+        Position,
         on_delete=models.CASCADE,
-        null=True,
-        related_name="bossworkers",
-        verbose_name="Штатный сотрудник",
+        related_name='spec_position',
+        verbose_name='Позиция в штатке'
     )
 
     class Meta:
-        verbose_name = "Босс_Штатные_спецы"
+        db_table = "specialist"
+        ordering = ("id",)
+        verbose_name = "Специалист"
+        verbose_name_plural = "Специалисты"
+
         constraints = [
             UniqueConstraint(
-                fields=("boss", "worker"),
-                name="unique_boss_workers"),
+                fields=("full_name", "position"),
+                name="unique_specpositionlist")
         ]
 
     def __str__(self):
-        return (
-            f"Босс {self.boss.name} над подчиненным {self.worker.name}"
-        )
-
-
-class CurrentSpecialist(models.Model):
-    """Текущий специалист"""
-    BOSS = "boss"
-    WORKER = "worker"
-    ROLE = [
-        (BOSS, "Босс"),
-        (WORKER, "Штатный сотрудник")
-    ]
-
-    role = models.CharField(
-        max_length=16,
-        choices=ROLE,
-        default=WORKER,
-        verbose_name="Роль сотрудника",
-    )
-    if role == 'BOSS':
-        worker = models.ManyToManyField(
-            Worker,
-            related_name="currspec",
-            through="BossWorkers",
-            verbose_name="Штатный сотрудник"
-        )
-    boss = models.ForeignKey(
-        Boss,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="currspec",
-        verbose_name="Босс"
-    )
-
-    department = models.ForeignKey(
-        CurrentDepartment,
-        on_delete=models.CASCADE,
-        null=True,
-        related_name="depspec",
-        verbose_name="Подразделение"
-    )
-
-    class Meta:
-        verbose_name = "Текущее подразделение"
-        ordering = ("id",)
+        return f"{self.full_name} на позиции - {self.position}"

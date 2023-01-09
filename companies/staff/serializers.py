@@ -1,35 +1,11 @@
 from rest_framework import serializers
 
-from staff.models import Boss, Worker, BossWorkers, CurrentSpecialist
+from staff.models import Specialist
 
 
-class BossSerializer(serializers.ModelSerializer):
-    """Сериализатор модели Босс"""
-
-    class Meta:
-        fields = "__all__"
-        model = Boss
-
-
-class WorkerSerializer(serializers.ModelSerializer):
-    """Сериализатор модели Сотрудник"""
+class SpecialistSerializer(serializers.ModelSerializer):
+    """Сериализатор спецаилиста"""
 
     class Meta:
         fields = "__all__"
-        model = Worker
-
-
-class BossWorkersSerializer(serializers.ModelSerializer):
-    """Сериализатор модели отношения Босс-Сотрудник"""
-
-    class Meta:
-        fields = "__all__"
-        model = BossWorkers
-
-
-class CurrentSpecialistSerializer(serializers.ModelSerializer):
-    """Сериализатор текущего спецаилиста"""
-
-    class Meta:
-        fields = "__all__"
-        model = CurrentSpecialist
+        model = Specialist
