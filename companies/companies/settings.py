@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'staff',
     'departments',
     'mptt',
+    'django_mptt_admin',
 ]
 
 MIDDLEWARE = [

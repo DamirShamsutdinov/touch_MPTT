@@ -1,12 +1,9 @@
-import mptt
 from django.db import models
-from mptt.fields import TreeForeignKey
-from mptt.models import MPTTModel
 
 from staff.models import Specialist, Position
 
 
-class Department(MPTTModel):
+class Department(models.Model):
     """Модель департамента"""
     name = models.CharField(
         max_length=100,
@@ -30,20 +27,12 @@ class Department(MPTTModel):
         related_name='dep_staff',
         verbose_name='Штатный сотрудник департамента'
     )
-    parent = TreeForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        related_name='children'
-    )
 
-    def __str__(self):
-        return self.name
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
+    class Meta:
         db_table = "department"
+        ordering = ("name",)
         verbose_name = "Департамент"
         verbose_name_plural = "Департаменты"
 
+    def __str__(self):
+        return self.name

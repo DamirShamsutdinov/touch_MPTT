@@ -1,15 +1,6 @@
 from rest_framework import serializers
 
 from departments.models import Department
-from staff.models import Position
-
-
-class PositionSerializer(serializers.ModelSerializer):
-    """Сериализатор модели Позиция"""
-
-    class Meta:
-        fields = "__all__"
-        model = Position
 
 
 class DepartmentSerializer(serializers.ModelSerializer):

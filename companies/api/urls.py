@@ -1,4 +1,4 @@
-from django.urls import include, path, re_path
+from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
 from api.views import PositionViewSet, DepartmentViewSet, SpecialistViewSet
