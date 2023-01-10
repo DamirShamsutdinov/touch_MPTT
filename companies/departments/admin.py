@@ -1,6 +1,7 @@
-from departments.models import Department, Specialist, Position
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
+
+from departments.models import Department, Position, Specialist
 
 
 class SpecialistAdmin(admin.ModelAdmin):

@@ -1,10 +1,9 @@
-from mptt.forms import TreeNodeChoiceField
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from departments.models import Department, Specialist, Position
-from departments.serializers import DepartmentSerializer, SpecialistSerializer, \
-    PositionSerializer
+from departments.models import Department, Position, Specialist
+from departments.serializers import (DepartmentSerializer, PositionSerializer,
+                                     SpecialistSerializer)
 
 
 class SpecialistViewSet(viewsets.ModelViewSet):

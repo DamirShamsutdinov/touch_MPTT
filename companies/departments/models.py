@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import UniqueConstraint, ForeignKey
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 

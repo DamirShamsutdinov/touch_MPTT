@@ -1,5 +1,6 @@
-from departments.models import Department, Specialist, Position
 from rest_framework import serializers
+
+from departments.models import Department, Position, Specialist
 
 
 class SpecialistSerializer(serializers.ModelSerializer):
@@ -12,21 +13,11 @@ class SpecialistSerializer(serializers.ModelSerializer):
 
 class StaffSerializer(serializers.ModelSerializer):
     """Сериализатор спецаилиста"""
+    position = serializers.ReadOnlyField(source="position.name")
 
     class Meta:
         model = Specialist
-        fields = ('full_name', 'email',)
-
-
-# class PositionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Position
-#         fields = ('id', 'name', 'salary', 'description', 'parent', 'children')
-#
-#     def get_fields(self):
-#         fields = super(PositionSerializer, self).get_fields()
-#         fields['children'] = PositionSerializer(many=True)
-#         return fields
+        fields = ('full_name', 'position', 'email',)
 
 
 class PositionSerializer(serializers.ModelSerializer):

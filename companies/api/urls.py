@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from api.views import PositionViewSet, DepartmentViewSet, SpecialistViewSet
+from api.views import DepartmentViewSet, PositionViewSet, SpecialistViewSet
 
 router = SimpleRouter()
 router.register("department", DepartmentViewSet, basename="department")
