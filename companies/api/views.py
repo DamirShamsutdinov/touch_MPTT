@@ -2,10 +2,9 @@ from mptt.forms import TreeNodeChoiceField
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from departments.models import Department
-from departments.serializers import DepartmentSerializer
-from staff.models import Specialist, Position
-from staff.serializers import SpecialistSerializer, PositionSerializer
+from departments.models import Department, Specialist, Position
+from departments.serializers import DepartmentSerializer, SpecialistSerializer, \
+    PositionSerializer
 
 
 class SpecialistViewSet(viewsets.ModelViewSet):
@@ -18,11 +17,15 @@ class SpecialistViewSet(viewsets.ModelViewSet):
 class PositionViewSet(viewsets.ModelViewSet):
     """Вьюсет для доступа к позициям штатки"""
 
-    # queryset = Position.objects.all()
-    # serializer_class = PositionSerializer
-
     serializer_class = PositionSerializer
     queryset = Position.objects.all()
+
+
+class DepartmentViewSet(viewsets.ModelViewSet):
+    """Вьюсет для доступа к Департаментам"""
+
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
 
     def serialize_tree(self, queryset):
         for obj in queryset:
@@ -39,16 +42,3 @@ class PositionViewSet(viewsets.ModelViewSet):
         self.object = self.get_object()
         data = self.serialize_tree([self.object])
         return Response(data)
-
-
-
-
-
-
-
-
-class DepartmentViewSet(viewsets.ModelViewSet):
-    """Вьюсет для доступа к Департаментам"""
-
-    queryset = Department.objects.all()
-    serializer_class = DepartmentSerializer
