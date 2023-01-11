@@ -42,5 +42,4 @@ P.S.:
 ### Пример того что должно получиться
 
 ![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/1.jpg)<br><br>
-![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/2.jpg)<br><br>
 ![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/3.jpg)<br><br>
