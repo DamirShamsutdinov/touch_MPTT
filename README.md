@@ -41,6 +41,6 @@ P.S.:
 
 ### Пример того что должно получиться
 
-![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/1.jpg)
-![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/2.jpg)
+![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/1.jpg)<br>
+![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/2.jpg)<br>
 ![screenshot](https://github.com/DamirShamsutdinov/touch_MPTT/blob/main/3.jpg)
